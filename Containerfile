@@ -15,6 +15,7 @@ RUN dnf update -y \
         gcc-c++ \
         SDL2-devel \
         freetype-devel \
+        libstdc++-static \
         dub \
         git
 
