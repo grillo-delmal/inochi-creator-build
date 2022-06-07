@@ -78,12 +78,17 @@ popd
 pushd src
 pushd inochi-creator
 if [[ -z ${DEBUG} ]]; then
-    export DFLAGS='-link-defaultlib-shared=true' 
-    dub build
+    if [[ ! -z ${SHARED_DLANG} ]]; then
+        export DFLAGS='-link-defaultlib-shared=true -g --d-debug'
+    fi
 else
-    export DFLAGS='-link-defaultlib-shared=true -g --d-debug'
-    dub build
+    if [[ ! -z ${SHARED_DLANG} ]]; then
+        export DFLAGS='-link-defaultlib-shared=true -g --d-debug'
+    else
+        export DFLAGS='-g --d-debug'
+    fi
 fi
+dub build
 popd
 popd
 

@@ -22,6 +22,7 @@ podman run -ti --rm \
     -v $(pwd)/src/vmc-d:/opt/orig/vmc-d/:ro,Z \
     -v $(pwd)/src/i18n:/opt/orig/i18n/:ro,Z \
     -e DEBUG=${DEBUG} \
+    -e SHARED_DLANG=${SHARED_DLANG} \
     localhost/inochi-creator-build-c7:latest
 
 podman unshare chown 0:0 -R $(pwd)/build_out
