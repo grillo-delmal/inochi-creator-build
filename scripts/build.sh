@@ -38,6 +38,7 @@ git -C /opt/src/bindbc-imgui diff ...${PATCH_HASH:0:7} \
     'dub.sdl' \
     'deps/CMakeLists.txt' \
     > /opt/out/patch/bindbc-imgui-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
+sed -i 's/libstdc++.a/libstdc++.so/g' /opt/out/patch/bindbc-imgui-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
 git -C /opt/src/bindbc-imgui apply /opt/out/patch/bindbc-imgui-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
 
 # Patch to silence "function 'xxx' without 'this' cannot be 'const'" error messages

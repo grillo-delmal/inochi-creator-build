@@ -15,7 +15,6 @@ RUN yum update -y \
         gcc-c++ \
         SDL2-devel \
         freetype-devel \
-        libstdc++-static \
         cmake3
 
 RUN ln -s /usr/bin/cmake3 /usr/bin/cmake
