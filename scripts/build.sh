@@ -22,33 +22,11 @@ rsync -r /opt/orig/inmath/ /opt/src/inmath/
 rsync -r /opt/orig/vmc-d/ /opt/src/vmc-d/
 rsync -r /opt/orig/i18n/ /opt/src/i18n/
 
-mkdir -p /opt/out/patch
-# Get static build patch from origin/playmer/cimguiUpdate
-BASE_HASH=$(git -C /opt/src/inochi-creator/ rev-parse HEAD)
-PATCH_HASH=3ffe4e1d58f913fc26248dbff716c3833e2520ee
-git -C /opt/src/inochi-creator/ diff ...${PATCH_HASH:0:7} \
-    'source/creator/core/package.d' \
-    > /opt/out/patch/inochi-creator-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
-git -C /opt/src/inochi-creator/ apply /opt/out/patch/inochi-creator-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
-
-# Get static build patch from origin/playmer/cimguiUpdate
-BASE_HASH=$(git -C /opt/src/bindbc-imgui/ rev-parse HEAD)
-PATCH_HASH=244defdff2415205d7f33af0b119ac52fc926ef3
-git -C /opt/src/bindbc-imgui diff ...${PATCH_HASH:0:7} \
-    'dub.sdl' \
-    'deps/CMakeLists.txt' \
-    > /opt/out/patch/bindbc-imgui-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
-sed -i 's/libstdc++.a/libstdc++.so/g' /opt/out/patch/bindbc-imgui-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
-git -C /opt/src/bindbc-imgui apply /opt/out/patch/bindbc-imgui-${BASE_HASH:0:7}-${PATCH_HASH:0:7}.patch
-
-# Patch to silence "function 'xxx' without 'this' cannot be 'const'" error messages
-git -C /opt/src/bindbc-imgui apply /opt/build/bindbc-imgui-consts.patch
-
 # Add dlang deps
 dub add-local /opt/src/inochi2d/        "$(semver /opt/src/inochi2d/ 0.7.2)"
 dub add-local /opt/src/psd-d/           "$(semver /opt/src/psd-d/)"
 dub add-local /opt/src/gitver/          "$(semver /opt/src/gitver/)"
-dub add-local /opt/src/bindbc-imgui/    "$(semver /opt/src/bindbc-imgui/ 1.0.1)"
+dub add-local /opt/src/bindbc-imgui/    "$(semver /opt/src/bindbc-imgui/)"
 dub add-local /opt/src/facetrack-d/     "$(semver /opt/src/facetrack-d/)"
 dub add-local /opt/src/fghj/            "$(semver /opt/src/fghj/)"
 dub add-local /opt/src/inmath/          "$(semver /opt/src/inmath/)"

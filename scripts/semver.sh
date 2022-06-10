@@ -19,6 +19,10 @@ function semver() {
 
     if [ "${BUILD}" = "" ]; then
         BUILD='0'
+        if [ ! -z "$2" ]; then
+            echo ${2}+build.0-og.${VERSION}
+            return
+        fi
         echo ${VERSION}
         return
     fi
