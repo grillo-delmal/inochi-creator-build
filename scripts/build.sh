@@ -54,7 +54,7 @@ pushd src
 pushd inochi-creator
 if [[ -z ${DEBUG} ]]; then
     if [[ ! -z ${SHARED_DLANG} ]]; then
-        export DFLAGS='-link-defaultlib-shared=true -g --d-debug'
+        export DFLAGS='-link-defaultlib-shared=true'
     fi
 else
     if [[ ! -z ${SHARED_DLANG} ]]; then
