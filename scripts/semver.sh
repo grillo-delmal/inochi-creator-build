@@ -10,6 +10,7 @@ function semver() {
     local VERSION=`echo $DESCRIBE | awk '{split($0,a,"-"); print a[1]}'`
     local BUILD=`echo $DESCRIBE | awk '{split($0,a,"-"); print a[2]}'`
     local PATCH=`echo $DESCRIBE | awk '{split($0,a,"-"); print a[3]}'`
+    local MODE=
 
     if [[ "${DESCRIBE}" =~ ^[A-Fa-f0-9]+$ ]]; then
         VERSION="0.0.0"
@@ -24,6 +25,41 @@ function semver() {
             return
         fi
         echo ${VERSION}
+        return
+    fi
+
+    if [[ ! "${BUILD}" =~ ^[0-9]+$ ]]; then
+        MODE=`echo $DESCRIBE | awk '{split($0,a,"-"); print a[2]}'`
+        BUILD=`echo $DESCRIBE | awk '{split($0,a,"-"); print a[3]}'`
+        PATCH=`echo $DESCRIBE | awk '{split($0,a,"-"); print a[4]}'`
+
+        if [ "${BUILD}" = "" ]; then
+
+            if [[ "${MODE}" =~ ^pre || "${MODE}" =~ ^rc ]]; then
+                RESULT="${VERSION}-${MODE}"
+            else
+                RESULT="${VERSION}+${MODE}"
+            fi
+
+            if [ ! -z "$2" ]; then
+                echo ${2}+build.0-og.${RESULT}
+            else
+                echo ${RESULT}
+            fi
+
+        else
+            if [[ "${MODE}" =~ ^pre || "${MODE}" =~ ^rc ]]; then
+                RESULT="${VERSION}-${MODE}"
+            else
+                RESULT="${VERSION}+${MODE}"
+            fi
+
+            if [ ! -z "$2" ]; then
+                echo ${2}+build.0-og.${RESULT}.build.${BUILD}.${PATCH}
+            else
+                echo ${RESULT}.build.${BUILD}.${PATCH}
+            fi
+        fi
         return
     fi
 
