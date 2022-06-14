@@ -36,20 +36,16 @@ dub add-local /opt/src/i18n/            "$(semver /opt/src/i18n/)"
 # Build bindbc-imgui deps
 pushd src
 pushd bindbc-imgui
-pushd deps
-mkdir build_linux_x64_cimguiStatic
-pushd build_linux_x64_cimguiStatic
+mkdir -p deps/build_linux_x64_cimguiStatic
 
 if [[ -z ${DEBUG} ]]; then
-    cmake .. -DSTATIC_CIMGUI=
-    cmake --build . --config Release
+    cmake -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
+    cmake --build deps/build_linux_x64_cimguiStatic --config Release
 else
-    cmake .. -DSTATIC_CIMGUI= -DCMAKE_BUILD_TYPE=Debug 
-    cmake --build . --config Debug
+    cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
+    cmake --build deps/build_linux_x64_cimguiStatic --config Debug
 fi
 
-popd
-popd
 popd
 popd
 
