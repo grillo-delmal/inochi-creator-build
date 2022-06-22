@@ -1,8 +1,8 @@
 # Inochi Creator builder
 
-I built this with the purpose of using it as reference to package the software into COPR in the future for Fedora 36+.
+This is my reference building process for inochi-creator. I built this with the purpose of using it as reference to eventually package the software into COPR.
 
-This is my reference building process for inochi-creator, versions generated using this scripts are not supported by the upstream project.
+Versions generated using this scripts are not supported by the upstream project.
 
 ## Dependencies
 
