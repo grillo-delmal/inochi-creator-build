@@ -23,7 +23,7 @@ rsync -r /opt/orig/vmc-d/ /opt/src/vmc-d/
 rsync -r /opt/orig/i18n/ /opt/src/i18n/
 
 # Add dlang deps
-dub add-local /opt/src/inochi2d/        "$(semver /opt/src/inochi2d/ 0.7.2)"
+dub add-local /opt/src/inochi2d/        "$(semver /opt/src/inochi2d/)"
 dub add-local /opt/src/psd-d/           "$(semver /opt/src/psd-d/)"
 dub add-local /opt/src/gitver/          "$(semver /opt/src/gitver/)"
 dub add-local /opt/src/bindbc-imgui/    "$(semver /opt/src/bindbc-imgui/)"

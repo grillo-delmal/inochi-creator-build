@@ -18,6 +18,8 @@ function git_version() {
         local MODE=${BUILD}
         if [[ "${MODE}" =~ ^pre || "${MODE}" =~ ^rc ]]; then
             echo "${VERSION}~${MODE}"
+        elif [ "${BUILD}" = "" ]; then
+            echo "${VERSION}"
         else
             echo "${VERSION}_${MODE}"
         fi
