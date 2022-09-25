@@ -38,12 +38,23 @@ pushd src
 pushd bindbc-imgui
 mkdir -p deps/build_linux_x64_cimguiStatic
 
-if [[ -z ${DEBUG} ]]; then
-    cmake -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
-    cmake --build deps/build_linux_x64_cimguiStatic --config Release
-else
-    cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
-    cmake --build deps/build_linux_x64_cimguiStatic --config Debug
+ARCH=$(uname -m)
+if [ "${ARCH}" == 'x86_64' ]; then
+    if [[ -z ${DEBUG} ]]; then
+        cmake -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
+        cmake --build deps/build_linux_x64_cimguiStatic --config Release
+    else
+        cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
+        cmake --build deps/build_linux_x64_cimguiStatic --config Debug
+    fi
+elif [ "${ARCH}" == 'aarch64' ]; then
+    if [[ -z ${DEBUG} ]]; then
+        cmake -DSTATIC_CIMGUI= -S deps -B deps/build_linux_aarch64_cimguiStatic
+        cmake --build deps/build_linux_aarch64_cimguiStatic --config Release
+    else
+        cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC_CIMGUI= -S deps -B deps/build_linux_aarch64_cimguiStatic
+        cmake --build deps/build_linux_aarch64_cimguiStatic --config Debug
+    fi
 fi
 
 popd
