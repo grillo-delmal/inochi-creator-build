@@ -20,12 +20,11 @@ echo ""
 echo '# Project maintained deps'
 cat build_out/version_dump | tail -n +2 | grep '/opt/src/' | sort | while read line
 do
-    readarray -d ':' -t ARR_A <<< "$line"
-    readarray -d ' ' -t ARR_B <<< "${ARR_A[0]}"
+    readarray -d ' ' -t ARR_A <<< "$line"
 
-    NAME=$(echo "${ARR_B[0]}" | sed 's/-/_/g' | awk '{print tolower($0)}' )
-    SEMVER=$(echo "${ARR_B[1]}" | sed 's/\s+$//g')
-    GITPATH=$(echo "${ARR_A[1]}" | sed 's/\/opt\//.\//g')
+    NAME=$(echo "${ARR_A[0]}" | sed 's/-/_/g' | awk '{print tolower($0)}' )
+    SEMVER=$(echo "${ARR_A[1]::-1}" | sed 's/\s+$//g')
+    GITPATH=$(echo "${ARR_A[2]}" | sed 's/\/opt\//.\//g')
     COMMIT=$(git -C ${GITPATH} rev-parse HEAD)
     GITVER=$(git -C ${GITPATH} describe --tags)
 
@@ -38,11 +37,15 @@ done
 echo '# Indirect deps'
 cat build_out/version_dump | tail -n +2 | grep '/root/.' | sort | while read line
 do
-    readarray -d ':' -t ARR_A <<< "$line"
-    readarray -d ' ' -t ARR_B <<< "${ARR_A[0]}"
+    readarray -d ' ' -t ARR_A <<< "$line"
 
-    NAME=$(echo "${ARR_B[0]}" | sed 's/-/_/g' | awk '{print tolower($0)}' )
-    SEMVER=$(echo "${ARR_B[1]}" | sed 's/\s+$//g')
+    NAME=$(echo "${ARR_A[0]}" | sed 's/-/_/g' | awk '{print tolower($0)}' )
+    SEMVER=$(echo "${ARR_A[1]::-1}" | sed 's/\s+$//g')
+
+    # Skip if it's a subpackage
+    if [[ ${NAME} =~ ":" ]]; then
+        continue
+    fi
 
     echo "%define ${NAME}_ver ${SEMVER}"
 
