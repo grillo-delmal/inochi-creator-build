@@ -28,3 +28,6 @@
 [submodule "src/i18n"]
 	path = src/i18n
 	url = https://github.com/KitsunebiGames/i18n.git
+[submodule "src/dportals"]
+	path = src/dportals
+	url = https://github.com/Inochi2D/dportals.git

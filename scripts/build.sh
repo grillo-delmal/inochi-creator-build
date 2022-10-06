@@ -21,6 +21,7 @@ rsync -r /opt/orig/fghj/ /opt/src/fghj/
 rsync -r /opt/orig/inmath/ /opt/src/inmath/
 rsync -r /opt/orig/vmc-d/ /opt/src/vmc-d/
 rsync -r /opt/orig/i18n/ /opt/src/i18n/
+rsync -r /opt/orig/dportals/ /opt/src/dportals/
 
 # Add dlang deps
 dub add-local /opt/src/inochi2d/        "$(semver /opt/src/inochi2d/)"
@@ -32,6 +33,7 @@ dub add-local /opt/src/fghj/            "$(semver /opt/src/fghj/)"
 dub add-local /opt/src/inmath/          "$(semver /opt/src/inmath/)"
 dub add-local /opt/src/vmc-d/           "$(semver /opt/src/vmc-d/)"
 dub add-local /opt/src/i18n/            "$(semver /opt/src/i18n/)"
+dub add-local /opt/src/dportals/        "$(semver /opt/src/dportals/)"
 
 # Build bindbc-imgui deps
 pushd src
@@ -61,16 +63,25 @@ popd
 popd
 
 # Build inochi-creator
+# Build inochi-session
 pushd src
 pushd inochi-creator
 if [[ ! -z ${DEBUG} ]]; then
     export DFLAGS='-g --d-debug'
 fi
-dub build
+export DC='/usr/bin/ldc2'
+echo "Download time" > /opt/out/stats 
+{ time dub describe --config=barebones 2>&1 > /opt/out/describe ; }  2>> /opt/out/stats
+echo "" >> /opt/out/stats 
+echo "Build time" >> /opt/out/stats 
+{ time dub build --config=barebones --override-config=facetrack-d/web-adaptors 2>&1 ; } 2>> /opt/out/stats
 popd
 popd
 
 # Install
 rsync -r /opt/src/inochi-creator/out/ /opt/out/inochi/
-
+echo "" >> /opt/out/stats 
+echo "Result files" >> /opt/out/stats 
+echo "" >> /opt/out/stats 
+du -sh /opt/out/inochi/* >> /opt/out/stats
 dub list > /opt/out/version_dump
