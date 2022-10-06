@@ -63,9 +63,25 @@ popd
 popd
 
 # Build inochi-creator
-# Build inochi-session
 pushd src
 pushd inochi-creator
+
+# Remove branding assets
+rm -rf res/Inochi-Creator.iconset/
+find res/ui/ -type f -not -name "grid.png" -delete
+rm res/icon.png
+rm res/Info.plist
+rm res/logo.png
+rm res/logo_256.png
+rm res/inochi-creator.ico
+rm res/inochi-creator.rc
+rm res/shaders/ada.frag
+rm res/shaders/ada.vert
+
+rm source/creator/config.d
+cp /opt/build/config.d source/creator/
+cp /opt/build/empty.png res/ui/banner.png
+
 if [[ ! -z ${DEBUG} ]]; then
     export DFLAGS='-g --d-debug'
 fi
