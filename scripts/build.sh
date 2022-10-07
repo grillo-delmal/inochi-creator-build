@@ -78,19 +78,30 @@ rm res/inochi-creator.rc
 rm res/shaders/ada.frag
 rm res/shaders/ada.vert
 
+# Replace files
 rm source/creator/config.d
-cp /opt/build/config.d source/creator/
-cp /opt/build/empty.png res/ui/banner.png
+cp /opt/files/config.d source/creator/
+cp /opt/files/empty.png res/ui/banner.png
 
 if [[ ! -z ${DEBUG} ]]; then
     export DFLAGS='-g --d-debug'
 fi
 export DC='/usr/bin/ldc2'
 echo "Download time" > /opt/out/stats 
-{ time dub describe --config=barebones 2>&1 > /opt/out/describe ; }  2>> /opt/out/stats
+{ time \
+    dub describe \
+        --config=barebones \
+        --cache=local \
+            2>&1 > /opt/out/describe ; \
+    }  2>> /opt/out/stats
 echo "" >> /opt/out/stats 
 echo "Build time" >> /opt/out/stats 
-{ time dub build --config=barebones --override-config=facetrack-d/web-adaptors 2>&1 ; } 2>> /opt/out/stats
+{ time \
+    dub build \
+        --config=barebones \
+        --cache=local \
+            2>&1 ; \
+    } 2>> /opt/out/stats
 popd
 popd
 

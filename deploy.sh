@@ -22,6 +22,8 @@ podman run -ti --rm \
     -v $(pwd)/src/vmc-d:/opt/orig/vmc-d/:ro,Z \
     -v $(pwd)/src/i18n:/opt/orig/i18n/:ro,Z \
     -v $(pwd)/src/dportals:/opt/orig/dportals/:ro,Z \
+    -v $(pwd)/patches:/opt/patches/:ro,Z \
+    -v $(pwd)/files:/opt/files/:ro,Z \
     -e DEBUG=${DEBUG} \
     localhost/inochi-creator-build:latest
 

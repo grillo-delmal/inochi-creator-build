@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 function semver() {
-    local DESCRIBE=`git -C $1 describe --tags --always`
+    local DESCRIBE=`git -C $1 describe --tags --exclude nightly --always`
     if [[ "${DESCRIBE}" =~ ^[v] ]]; then
         DESCRIBE="${DESCRIBE:1}"
     fi
