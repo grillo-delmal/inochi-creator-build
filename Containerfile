@@ -18,7 +18,8 @@ RUN dnf update -y \
         dub \
         git
 
-ADD scripts /opt/build
+ADD scripts/build.sh /opt/build/build.sh
+ADD scripts/semver.sh /opt/build/semver.sh
 
 WORKDIR /opt/build/
 

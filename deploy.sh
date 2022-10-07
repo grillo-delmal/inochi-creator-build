@@ -15,7 +15,6 @@ podman run -ti --rm \
     -v $(pwd)/src/inochi-creator:/opt/orig/inochi-creator/:ro,Z \
     -v $(pwd)/src/bindbc-imgui:/opt/orig/bindbc-imgui/:ro,Z \
     -v $(pwd)/src/psd-d:/opt/orig/psd-d/:ro,Z \
-    -v $(pwd)/src/gitver:/opt/orig/gitver/:ro,Z \
     -v $(pwd)/src/facetrack-d:/opt/orig/facetrack-d/:ro,Z \
     -v $(pwd)/src/fghj:/opt/orig/fghj/:ro,Z \
     -v $(pwd)/src/inmath:/opt/orig/inmath/:ro,Z \

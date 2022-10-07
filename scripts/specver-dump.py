@@ -54,19 +54,12 @@ project_deps = {
             '/opt/src/inochi-creator') and \
         name in deps}
 
-# HACK: gitver is not actually a dependency, but it is
-project_deps["gitver"] = {
-    "name": "gitver",
-    "version": "1.6.0",
-    "path": "/opt/src/gitver"
-}
-
 pd_names = list(project_deps.keys())
 pd_names.sort()
 
 for name in pd_names:
     NAME = project_deps[name]['name'].replace('-', '_').lower()
-    SEMVER = project_deps[name]['version'].replace('-', '_')
+    SEMVER = project_deps[name]['version']
     GITPATH = project_deps[name]['path'].replace("/opt","./")
     COMMIT = subprocess.run(
         ['git', '-C', GITPATH, 'rev-parse', 'HEAD'],
@@ -87,7 +80,6 @@ indirect_deps = {
         if dep_graph[name]['path'].startswith(
             '/opt/src/inochi-creator') and \
         name in deps}
-#print([name for name in indirect_deps.keys()])
 
 id_names = list(indirect_deps.keys())
 id_names.sort()
@@ -96,7 +88,7 @@ already_there = []
 
 for name in id_names:
     NAME = indirect_deps[name]['name'].replace('-', '_').lower().split(":")[0]
-    SEMVER = indirect_deps[name]['version'].replace('-', '_')
+    SEMVER = indirect_deps[name]['version']
 
     if (NAME, SEMVER) in already_there:
         continue
