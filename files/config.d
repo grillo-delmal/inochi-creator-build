@@ -20,6 +20,7 @@ module creator.config;
     If you change the banner you SHOULD change this.
 */
 enum INC_BANNER_ARTIST_NAME = "";
+enum INC_BANNER_ARTIST_PAGE = "https://github.com/grillo-delmal/";
 
 /**
     URI for bug reports, for unofficial builds this SHOULD be changed.
