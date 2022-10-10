@@ -7,8 +7,7 @@ source /opt/build/semver.sh
 # Clean out folder
 find /opt/out/ -mindepth 1 -maxdepth 1 -exec rm -r -- {} +
 
-cd /opt
-mkdir src
+mkdir -p /opt/src
 
 rsync -r /opt/orig/inochi-creator/ /opt/src/inochi-creator/
 
@@ -22,6 +21,7 @@ rsync -r /opt/orig/vmc-d/ /opt/src/vmc-d/
 rsync -r /opt/orig/i18n/ /opt/src/i18n/
 rsync -r /opt/orig/dportals/ /opt/src/dportals/
 
+cd /opt
 pushd patches
 for d in */ ; do
     for p in ${d}*.patch; do
@@ -45,44 +45,32 @@ enum IN_VERSION = "$(semver /opt/src/inochi2d/)";
 EOF
 
 # Add dlang deps
-dub add-local /opt/src/inochi2d/        "$(semver /opt/src/inochi2d/)"
-dub add-local /opt/src/psd-d/           "$(semver /opt/src/psd-d/)"
-dub add-local /opt/src/bindbc-imgui/    "$(semver /opt/src/bindbc-imgui/)"
-dub add-local /opt/src/facetrack-d/     "$(semver /opt/src/facetrack-d/)"
-dub add-local /opt/src/fghj/            "$(semver /opt/src/fghj/)"
-dub add-local /opt/src/inmath/          "$(semver /opt/src/inmath/)"
-dub add-local /opt/src/vmc-d/           "$(semver /opt/src/vmc-d/)"
-dub add-local /opt/src/i18n/            "$(semver /opt/src/i18n/)"
-dub add-local /opt/src/dportals/        "$(semver /opt/src/dportals/)"
+mkdir -p /var/lib/dub
+cat > /var/lib/dub/settings.json <<EOF
+{
+    "customCachePaths": ["/usr/include/zdub/"]
+}
+EOF
 
-# Build bindbc-imgui deps
-pushd src
-pushd bindbc-imgui
-mkdir -p deps/build_linux_x64_cimguiStatic
+function setver() {
+    mkdir -p /usr/include/zdub/$1-$2/
+    mv /opt/src/$1 /usr/include/zdub/$1-$2/
+    cd /usr/include/zdub/$1-$2/$1
+    setgittag --rm -f -m v$2
+}
 
-ARCH=$(uname -m)
-if [ "${ARCH}" == 'x86_64' ]; then
-    if [[ -z ${DEBUG} ]]; then
-        cmake -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
-        cmake --build deps/build_linux_x64_cimguiStatic --config Release
-    else
-        cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC_CIMGUI= -S deps -B deps/build_linux_x64_cimguiStatic
-        cmake --build deps/build_linux_x64_cimguiStatic --config Debug
-    fi
-elif [ "${ARCH}" == 'aarch64' ]; then
-    if [[ -z ${DEBUG} ]]; then
-        cmake -DSTATIC_CIMGUI= -S deps -B deps/build_linux_aarch64_cimguiStatic
-        cmake --build deps/build_linux_aarch64_cimguiStatic --config Release
-    else
-        cmake -DCMAKE_BUILD_TYPE=Debug -DSTATIC_CIMGUI= -S deps -B deps/build_linux_aarch64_cimguiStatic
-        cmake --build deps/build_linux_aarch64_cimguiStatic --config Debug
-    fi
-fi
-
-popd
-popd
+setver inochi2d      "$(semver /opt/orig/inochi2d/)"
+setver psd-d         "$(semver /opt/orig/psd-d/)"
+setver bindbc-imgui  "$(semver /opt/orig/bindbc-imgui/)"
+setver facetrack-d   "$(semver /opt/orig/facetrack-d/)"
+setver fghj          "$(semver /opt/orig/fghj/)"
+setver inmath        "$(semver /opt/orig/inmath/)"
+setver vmc-d         "$(semver /opt/orig/vmc-d/)"
+setver i18n          "$(semver /opt/orig/i18n/)"
+setver dportals      "$(semver /opt/orig/dportals/)"
 
 # Build inochi-creator
+cd /opt
 pushd src
 pushd inochi-creator
 
@@ -106,6 +94,7 @@ cp /opt/files/empty.png res/ui/banner.png
 if [[ ! -z ${DEBUG} ]]; then
     export DFLAGS='-g --d-debug'
 fi
+dub list > /opt/out/version_dump_pre
 export DC='/usr/bin/ldc2'
 echo "Download time" > /opt/out/stats 
 { time \
@@ -122,6 +111,7 @@ echo "Build time" >> /opt/out/stats
         --cache=local \
             2>&1 ; \
     } 2>> /opt/out/stats
+dub list > /opt/out/version_dump
 popd
 popd
 
@@ -131,4 +121,3 @@ echo "" >> /opt/out/stats
 echo "Result files" >> /opt/out/stats 
 echo "" >> /opt/out/stats 
 du -sh /opt/out/inochi/* >> /opt/out/stats
-dub list > /opt/out/version_dump

@@ -18,6 +18,11 @@ RUN dnf update -y \
         dub \
         git
 
+RUN dnf -y install 'dnf-command(copr)'
+RUN dnf -y copr enable grillo-delmal/dub-hack
+RUN dnf -y update
+RUN dnf -y install setgittag
+
 ADD scripts/build.sh /opt/build/build.sh
 ADD scripts/semver.sh /opt/build/semver.sh
 
